@@ -1,0 +1,3 @@
+[build]
+# Ruta corta: la compilacion de OpenSSL (SQLCipher) supera el limite de 260 caracteres de Windows con la ruta del proyecto.
+target-dir = "C:/ot"

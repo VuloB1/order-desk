@@ -1,0 +1,295 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-heading: var(--font-sans);
+    --font-sans: 'Geist Variable', sans-serif;
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.708 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.556 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground;
+    }
+  html {
+    @apply font-sans;
+    }
+}
+/* Cambio de tema suave: la clase solo está puesta durante el cambio (ver App.tsx). */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+    transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, fill 0.35s ease,
+        stroke 0.35s ease, box-shadow 0.35s ease !important;
+}
+
+/* El emoji del botón de tema "salta" al cambiar (se vuelve a montar con key). */
+@keyframes theme-icon-pop {
+    from { transform: rotate(-120deg) scale(0.3); opacity: 0; }
+    to { transform: none; opacity: 1; }
+}
+.theme-icon {
+    display: inline-block;
+    animation: theme-icon-pop 0.4s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html.theme-transition,
+    html.theme-transition * { transition: none !important; }
+    .theme-icon { animation: none; }
+}
+/* Microinteracciones sutiles: todo es opcional y se desactiva con "reducir animaciones". */
+[data-slot="button"] {
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease,
+        box-shadow 0.2s ease, transform 0.15s ease, opacity 0.15s ease;
+}
+[data-slot="button"]:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px -2px rgb(0 0 0 / 0.25);
+}
+[data-slot="button"]:not(:disabled):active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: none;
+}
+[data-slot="button"] svg {
+    transition: transform 0.2s ease;
+}
+[data-slot="button"]:not(:disabled):hover svg {
+    transform: scale(1.12);
+}
+
+[data-slot="input"],
+[data-slot="select-trigger"] {
+    transition: border-color 0.15s ease, box-shadow 0.2s ease, background-color 0.15s ease;
+}
+[data-slot="input"]:hover:not(:focus-visible),
+[data-slot="select-trigger"]:hover:not(:focus-visible) {
+    border-color: color-mix(in oklch, var(--ring) 60%, var(--input));
+}
+
+/* Lista de pedidos: las filas entran con un fundido escalonado y los distintivos resaltan al pasar el ratón. */
+@keyframes row-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+}
+[data-slot="table-body"] > [data-slot="table-row"]:nth-child(-n+10) {
+    animation: row-in 0.3s ease-out both;
+}
+[data-slot="table-body"] > [data-slot="table-row"]:nth-child(2) { animation-delay: 0.03s; }
+[data-slot="table-body"] > [data-slot="table-row"]:nth-child(3) { animation-delay: 0.06s; }
+[data-slot="table-body"] > [data-slot="table-row"]:nth-child(4) { animation-delay: 0.09s; }
+[data-slot="table-body"] > [data-slot="table-row"]:nth-child(5) { animation-delay: 0.12s; }
+[data-slot="table-body"] > [data-slot="table-row"]:nth-child(6) { animation-delay: 0.15s; }
+[data-slot="table-row"] [data-slot="badge"] {
+    transition: transform 0.2s ease;
+}
+[data-slot="table-row"]:hover [data-slot="badge"] {
+    transform: scale(1.06);
+}
+
+/* Filas de listas dentro de ventanas (productos, códigos): resaltado suave al pasar el ratón. */
+.row-hover {
+    transition: background-color 0.15s ease, box-shadow 0.2s ease;
+}
+.row-hover:hover {
+    background-color: color-mix(in oklch, var(--muted) 60%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-slot="button"],
+    [data-slot="button"] svg,
+    [data-slot="input"],
+    [data-slot="select-trigger"],
+    [data-slot="table-row"] [data-slot="badge"],
+    .row-hover { transition: none !important; }
+    [data-slot="button"]:hover,
+    [data-slot="button"]:active,
+    [data-slot="button"]:hover svg,
+    [data-slot="table-row"]:hover [data-slot="badge"] { transform: none !important; box-shadow: none !important; }
+    [data-slot="table-body"] > [data-slot="table-row"]:nth-child(-n+10) { animation: none; }
+}
+
+/* Barras de desplazamiento integradas con el tema (antes salían blancas). */
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
+*::-webkit-scrollbar { width: 12px; height: 12px; }
+*::-webkit-scrollbar-track,
+*::-webkit-scrollbar-corner { background: transparent; }
+*::-webkit-scrollbar-thumb {
+    background-color: color-mix(in oklch, var(--muted-foreground) 35%, transparent);
+    background-clip: content-box;
+    border: 3px solid transparent;
+    border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in oklch, var(--muted-foreground) 65%, transparent);
+}
+*::-webkit-scrollbar-thumb:active {
+    background-color: var(--muted-foreground);
+}
+
+
+/* Fondo de la aplicación (inspirado en vrcfinder.net): degradado suave, cuadrícula fina con líneas
+   mayores cada 120 px, resplandores en las esquinas y estrellas de 4 puntas. Todo sale de las
+   variables del tema, así que cambia solo con el tema claro/oscuro. */
+:root { --star: oklch(0.74 0.12 82); }
+.dark { --star: oklch(0.93 0.07 92); }
+
+.app-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    pointer-events: none;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--background) 0%, color-mix(in oklch, var(--background) 93%, var(--foreground)) 100%);
+}
+.app-backdrop::before,
+.app-backdrop::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
+.app-backdrop::before {
+    opacity: 0.34;
+    background-image:
+        linear-gradient(to right, color-mix(in oklch, var(--foreground) 7%, transparent) 1px, transparent 1px),
+        linear-gradient(color-mix(in oklch, var(--foreground) 7%, transparent) 1px, transparent 1px),
+        linear-gradient(to right, color-mix(in oklch, var(--foreground) 12%, transparent) 1px, transparent 1px),
+        linear-gradient(color-mix(in oklch, var(--foreground) 12%, transparent) 1px, transparent 1px);
+    background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+}
+.app-backdrop::after {
+    opacity: 0.85;
+    background-image:
+        radial-gradient(circle at 15% 10%, color-mix(in oklch, var(--foreground) 5%, transparent) 0%, transparent 45%),
+        radial-gradient(circle at 85% 90%, color-mix(in oklch, var(--star) 10%, transparent) 0%, transparent 45%);
+}
+
+.star {
+    position: absolute;
+    fill: var(--star);
+    opacity: 0.45;
+    transform: translate(-50%, -50%);
+    animation: star-twinkle 6s ease-in-out infinite;
+}
+@keyframes star-twinkle {
+    0%, 100% { opacity: 0.18; transform: translate(-50%, -50%) scale(0.7) rotate(0deg); }
+    50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1) rotate(12deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .star { animation: none; }
+}

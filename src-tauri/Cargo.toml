@@ -1,0 +1,47 @@
+[package]
+name = "order-desk"
+version = "0.2.1"
+description = "Order Desk"
+authors = []
+edition = "2024"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "order_desk_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+windows = { version = "0.62.2", features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging", "Win32_System_RemoteDesktop", "Win32_System_LibraryLoader"] }
+# SQLCipher (private.db). business.db usa el mismo motor sin clave. Requiere scripts/cargo-env.cmd.
+rusqlite = { version = "0.41.1", features = ["bundled-sqlcipher-vendored-openssl"] }
+argon2 = { version = "0.5.3", features = ["zeroize"] }
+chacha20poly1305 = "0.10.1"
+zeroize = "1"
+# Cuadro de "Guardar como" nativo, invocado solo desde Rust (la UI no tiene acceso a ficheros).
+rfd = "0.17"
+getrandom = "0.3"
+# Derivación de la clave de las copias de seguridad a partir de la DEK (separación de claves).
+hkdf = "0.12"
+sha2 = "0.10"
+uuid = { version = "1.29.0", features = ["v4"] }
+tauri-plugin-updater = "2.14.1"
+
+
+# Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true
+
