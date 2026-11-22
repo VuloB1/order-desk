@@ -4,6 +4,7 @@ mod db;
 mod domain;
 mod error;
 mod export;
+mod import;
 mod platform;
 mod vault;
 
@@ -65,6 +66,8 @@ pub fn run() {
             commands::vault::get_private_data,
             commands::vault::set_private_data,
             commands::export_orders,
+            commands::import_preview,
+            commands::import_apply,
             commands::backup::backup_create,
             commands::backup::backup_restore,
             commands::update::check_update,

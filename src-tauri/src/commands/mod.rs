@@ -6,6 +6,7 @@ use crate::db::{orders, private};
 use crate::domain::order::*;
 use crate::error::{AppError, Result};
 use crate::export::{self, Format};
+use crate::import::{self, ImportResult, ImportRow};
 use crate::vault::Vault;
 use rusqlite::Connection;
 use std::sync::{Mutex, MutexGuard};
@@ -176,6 +177,42 @@ pub async fn export_orders(
             .await?
             .map(|path| ExportResult { path, count }),
     )
+}
+
+/// Elige un Excel en el cuadro nativo y devuelve qué haría la importación (sin tocar nada).
+/// `None` = cancelado.
+#[tauri::command]
+pub async fn import_preview(
+    window: tauri::WebviewWindow,
+    db: State<'_, Db>,
+) -> Result<Option<Vec<ImportRow>>> {
+    let picked = tauri::async_runtime::spawn_blocking(move || {
+        rfd::FileDialog::new()
+            .set_parent(&window)
+            .set_title("Importar pedidos desde Excel")
+            .add_filter("Excel", &["xlsx"])
+            .pick_file()
+    })
+    .await
+    .map_err(|_| AppError::Io("La operación se interrumpió".into()))?;
+    let Some(path) = picked else { return Ok(None) };
+    import::preview(&db.conn(), &path).map(Some)
+}
+
+#[tauri::command]
+pub fn import_apply(
+    db: State<Db>,
+    rows: Vec<ImportRow>,
+    status: String,
+    date: String,
+) -> Result<ImportResult> {
+    check_status(&status)?;
+    if !valid_date(&date) {
+        return Err(AppError::Validation(
+            "Fecha no válida (use AAAA-MM-DD)".into(),
+        ));
+    }
+    import::apply(&mut db.conn(), rows, &status, &date)
 }
 
 /// Cuadro "Guardar como" nativo y escritura del fichero. `None` = cancelado. Bloquea, por eso va en

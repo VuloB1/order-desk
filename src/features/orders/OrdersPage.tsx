@@ -7,10 +7,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { api, errorMessage, STATUSES, type Destination, type OrderDetail, type OrderFilter, type OrderStatus, type DiscountCode, type OrderSummary, type Product } from "@/lib/api";
 import { todayIso } from "@/lib/money";
 import { createPortal } from "react-dom";
-import { BarChart3, Download, FileJson, FileSpreadsheet, Package, Plus, Ticket } from "lucide-react";
+import { BarChart3, Download, FileJson, FileSpreadsheet, FileUp, Package, Plus, Ticket } from "lucide-react";
 import { destinationItems, statusItems, statusLabel, t } from "@/i18n/es";
 import DiscountCodesDialog from "@/features/discounts/DiscountCodesDialog";
 import ProductsDialog from "@/features/products/ProductsDialog";
+import ImportDialog from "./ImportDialog";
 import StatsDialog from "@/features/stats/StatsDialog";
 import { useVault } from "@/features/vault/VaultContext";
 import OrderDetailDialog from "./OrderDetailDialog";
@@ -33,6 +34,7 @@ export default function OrdersPage({ actionsSlot }: { actionsSlot: HTMLElement |
   const [codes, setCodes] = useState<DiscountCode[]>([]);
   const [codesDialog, setCodesDialog] = useState(false);
   const [statsDialog, setStatsDialog] = useState(false);
+  const [importDialog, setImportDialog] = useState(false);
   const { status: vault } = useVault(); // al (des)bloquear cambia lo que busca la búsqueda
   const [exportOpen, setExportOpen] = useState(false);
   const [exportMsg, setExportMsg] = useState<string | null>(null);
@@ -130,6 +132,7 @@ export default function OrdersPage({ actionsSlot }: { actionsSlot: HTMLElement |
                 <Button variant="outline" className="w-full justify-start" onClick={() => void exportOrders("json")}><FileJson data-icon="inline-start" />{t.exportJson}</Button>
               </PopoverContent>
             </Popover>
+            <Button variant="ghost" size="icon-sm" aria-label={t.importer.open} title={t.importer.open} onClick={() => setImportDialog(true)}><FileUp /></Button>
             <Button variant="ghost" size="icon-sm" aria-label={t.stats.open} title={t.stats.open} onClick={() => setStatsDialog(true)}><BarChart3 /></Button>
             <Button variant="ghost" size="icon-sm" aria-label={t.products} title={t.products} onClick={() => setProductsDialog(true)}><Package /></Button>
             <Button variant="ghost" size="icon-sm" aria-label={t.codesTitle} title={t.codesTitle} onClick={() => setCodesDialog(true)}><Ticket /></Button>
@@ -180,6 +183,7 @@ export default function OrdersPage({ actionsSlot }: { actionsSlot: HTMLElement |
       {productsDialog && (
         <ProductsDialog products={products} onClose={() => setProductsDialog(false)} onChanged={loadProducts} />
       )}
+      {importDialog && <ImportDialog onClose={() => setImportDialog(false)} onChanged={() => void reload()} />}
       {statsDialog && <StatsDialog onClose={() => setStatsDialog(false)} />}
       {codesDialog && <DiscountCodesDialog codes={codes} onClose={() => setCodesDialog(false)} onChanged={loadCodes} />}
     </div>

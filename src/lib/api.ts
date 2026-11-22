@@ -104,6 +104,23 @@ export interface ExportResult {
   count: number;
 }
 
+export interface ImportRow {
+  row: number;
+  number: string;
+  kit: string;
+  country: string;
+  destination: Destination;
+  action: "new" | "update" | "same" | "skip";
+  note: string | null;
+}
+
+export interface ImportResult {
+  created: number;
+  updated: number;
+  skipped: number;
+  errors: string[];
+}
+
 export interface BackupResult {
   path: string;
   bytes: number;
@@ -135,6 +152,9 @@ export const api = {
   deleteOrder: (id: string) => invoke<void>("delete_order", { id }),
   lastOrderNumber: () => invoke<string | null>("last_order_number"),
   /** Abre "Guardar como" y escribe el fichero; null si se cancela. */
+  importPreview: () => invoke<ImportRow[] | null>("import_preview"),
+  importApply: (rows: ImportRow[], status: OrderStatus, date: string) =>
+    invoke<ImportResult>("import_apply", { rows, status, date }),
   exportOrders: (format: "json" | "csv", filter: OrderFilter, fileName: string) =>
     invoke<ExportResult | null>("export_orders", { format, filter, fileName }),
   /** Requiere la sección privada desbloqueada. Abre "Guardar como"; null si se cancela. */
