@@ -87,11 +87,11 @@ export default function App() {
 
   return (
     <VaultProvider>
-    <div className="min-h-screen text-foreground">
+    <div className="flex h-screen flex-col text-foreground">
       <Backdrop />
       {/* Misma anchura (max-w-6xl) y margen que el contenido, para que cabecera y página se alineen. */}
       {/* Barra de título propia (la ventana no tiene decoración de Windows): arrastrable y con sus controles. */}
-      <header data-tauri-drag-region className="sticky top-0 z-10 flex items-stretch border-b bg-card">
+      <header data-tauri-drag-region className="z-10 flex shrink-0 items-stretch border-b bg-card">
         <div data-tauri-drag-region className="mx-auto flex max-w-6xl h-9 flex-1 items-center gap-3 px-6">
           <h1 className="pointer-events-none flex items-center gap-2 text-base font-semibold"><Logo className="size-5" />Order Desk</h1>
           <span className="pointer-events-none rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">v{version}</span>
@@ -125,8 +125,11 @@ export default function App() {
           ))}
         </div>
       </header>
-      <BackupReminder />
-      <OrdersPage actionsSlot={slot} />
+      {/* Solo el contenido se desplaza: la barra de título queda fija y la barra de desplazamiento empieza debajo. */}
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        <BackupReminder />
+        <OrdersPage actionsSlot={slot} />
+      </div>
     </div>
     </VaultProvider>
   );
