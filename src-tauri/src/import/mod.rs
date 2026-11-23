@@ -370,13 +370,13 @@ mod tests {
             ["new", "new", "skip", "skip"]
         );
 
-        let r = apply(&mut c, rows, "delivered", "2026-01-31").unwrap();
+        let r = apply(&mut c, rows, "shipped", "2026-01-31").unwrap();
         assert_eq!((r.created, r.updated, r.skipped), (2, 0, 2));
         let listed = orders::list_orders(&c, &OrderFilter::default()).unwrap();
         assert!(
             listed
                 .iter()
-                .all(|o| o.status == "delivered" && o.order_date == "2026-01-31")
+                .all(|o| o.status == "shipped" && o.order_date == "2026-01-31")
         );
         assert_eq!(
             listed
@@ -409,7 +409,7 @@ mod tests {
                 o.destination.as_str(),
                 o.order_date.as_str()
             ),
-            ("delivered", "foreign", "2026-01-31")
+            ("shipped", "foreign", "2026-01-31")
         );
         assert_eq!(orders::get_order(&c, &o.id).unwrap().items[0].name, "icmx6");
     }

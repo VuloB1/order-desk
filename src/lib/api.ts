@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 
-export const STATUSES = ["pending", "paid", "preparing", "shipped", "delivered", "cancelled"] as const;
+export const STATUSES = ["pending", "awaiting_chips", "nrf", "classic", "testing", "ready", "shipped", "cancelled"] as const;
 export type OrderStatus = (typeof STATUSES)[number];
 
 export const DESTINATIONS = ["chile", "foreign"] as const;
@@ -104,6 +104,15 @@ export interface ExportResult {
   count: number;
 }
 
+export interface BoardSettings {
+  repoUrl: string;
+}
+
+export interface PublishResult {
+  changed: boolean;
+  pagesUrl: string | null;
+}
+
 export interface ImportRow {
   row: number;
   number: string;
@@ -152,6 +161,9 @@ export const api = {
   deleteOrder: (id: string) => invoke<void>("delete_order", { id }),
   lastOrderNumber: () => invoke<string | null>("last_order_number"),
   /** Abre "Guardar como" y escribe el fichero; null si se cancela. */
+  getBoardSettings: () => invoke<BoardSettings>("get_board_settings"),
+  setBoardSettings: (repoUrl: string) => invoke<BoardSettings>("set_board_settings", { repoUrl }),
+  publishBoard: () => invoke<PublishResult>("publish_board"),
   importPreview: () => invoke<ImportRow[] | null>("import_preview"),
   importApply: (rows: ImportRow[], status: OrderStatus, date: string) =>
     invoke<ImportResult>("import_apply", { rows, status, date }),

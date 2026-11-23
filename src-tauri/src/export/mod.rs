@@ -1,5 +1,7 @@
 //! Exportación a JSON y CSV. Lee únicamente de `business.db` y emite una lista blanca de campos
 //! (structs propios, no los tipos de dominio): los datos privados no pueden colarse por construcción.
+pub mod board;
+
 use crate::db::orders;
 use crate::domain::order::{OrderDetail, OrderFilter};
 use crate::error::{AppError, Result};
@@ -147,10 +149,12 @@ pub fn render(format: Format, orders: &[OrderDetail]) -> Result<Vec<u8>> {
 fn status_es(s: &str) -> &str {
     match s {
         "pending" => "Pendiente",
-        "paid" => "Pagado",
-        "preparing" => "Preparando",
-        "shipped" => "Enviado",
-        "delivered" => "Entregado",
+        "awaiting_chips" => "Espera chips",
+        "nrf" => "Fabricación NRF",
+        "classic" => "Fabricación Classic",
+        "testing" => "En pruebas",
+        "ready" => "Listo para enviar",
+        "shipped" => "Enviado/Completado",
         "cancelled" => "Cancelado",
         other => other,
     }

@@ -7,20 +7,24 @@ import { DESTINATIONS, STATUSES, type Destination, type OrderStatus } from "@/li
 
 export const statusLabel: Record<OrderStatus, string> = {
   pending: "⏳ Pendiente",
-  paid: "💰 Pagado",
-  preparing: "📦 Preparando",
-  shipped: "🚚 Enviado",
-  delivered: "✅ Entregado",
+  awaiting_chips: "🧩 Espera chips",
+  nrf: "🔧 Fabricación NRF",
+  classic: "🛠️ Fabricación Classic",
+  testing: "🧪 En pruebas",
+  ready: "📦 Listo para enviar",
+  shipped: "🚚 Enviado/Completado",
   cancelled: "❌ Cancelado",
 };
 
 /** Colores del distintivo de estado (claro y oscuro). */
 export const statusColor: Record<OrderStatus, string> = {
   pending: "bg-yellow-200 text-yellow-950 dark:bg-yellow-500/25 dark:text-yellow-200",
-  paid: "bg-emerald-200 text-emerald-950 dark:bg-emerald-500/25 dark:text-emerald-200",
-  preparing: "bg-violet-200 text-violet-950 dark:bg-violet-500/25 dark:text-violet-200",
+  awaiting_chips: "bg-rose-200 text-rose-950 dark:bg-rose-500/25 dark:text-rose-200",
+  nrf: "bg-violet-200 text-violet-950 dark:bg-violet-500/25 dark:text-violet-200",
+  classic: "bg-indigo-200 text-indigo-950 dark:bg-indigo-500/25 dark:text-indigo-200",
+  testing: "bg-amber-200 text-amber-950 dark:bg-amber-500/25 dark:text-amber-200",
+  ready: "bg-emerald-200 text-emerald-950 dark:bg-emerald-500/25 dark:text-emerald-200",
   shipped: "bg-sky-200 text-sky-950 dark:bg-sky-500/25 dark:text-sky-200",
-  delivered: "bg-green-300 text-green-950 dark:bg-green-500/30 dark:text-green-200",
   cancelled: "bg-red-200 text-red-950 dark:bg-red-500/25 dark:text-red-200",
 };
 
@@ -128,6 +132,17 @@ export const t = {
     body: "La aplicación se cerrará para instalarla y se abrirá sola. Tus datos no se tocan y la sección privada quedará bloqueada.",
     install: "Actualizar",
     failed: "No se pudo actualizar: ",
+  },
+  board: {
+    open: "Publicar tablero",
+    settings: "Configurar tablero",
+    settingsTitle: "📋 Tablero público",
+    settingsIntro: "El tablero se publica en un repositorio de GitHub con GitHub Pages activado. Pon aquí su dirección; hace falta tener git instalado y la sesión de GitHub iniciada en este equipo. La aplicación no guarda ninguna clave. Solo se publican número de pedido, kit y destino.",
+    repoLabel: "Dirección del repositorio",
+    save: "Guardar",
+    publishing: "⏳ Publicando el tablero…",
+    done: (url: string | null) => `✅ Tablero publicado${url ? `: ${url} (GitHub tarda un minuto en reflejarlo)` : ""}`,
+    upToDate: "✅ El tablero ya estaba al día",
   },
   importer: {
     open: "Importar desde Excel",

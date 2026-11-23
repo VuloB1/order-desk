@@ -517,9 +517,9 @@ mod tests {
             c.query_row("PRAGMA user_version", [], |r| r.get::<_, i64>(0))
                 .unwrap()
         };
-        assert_eq!(v(&c), 5);
+        assert_eq!(v(&c), 6);
         migrate(&mut c).unwrap();
-        assert_eq!(v(&c), 5);
+        assert_eq!(v(&c), 6);
         c.pragma_update(None, "user_version", 99).unwrap();
         assert!(migrate(&mut c).is_err());
     }
@@ -635,7 +635,7 @@ mod tests {
         let o = get_order(&c, "o1").unwrap();
         assert_eq!(
             (o.summary.total_cents, o.summary.status.as_str()),
-            (1_000, "paid")
+            (1_000, "pending")
         );
         assert_eq!(o.summary.discount_code, None);
         assert_eq!(o.summary.destination, "chile"); // los pedidos antiguos se consideran de Chile
@@ -654,6 +654,40 @@ mod tests {
             .collect::<rusqlite::Result<_>>()
             .unwrap();
         assert!(!cols.contains(&"clp_per_usd".to_string()));
+    }
+
+    #[test]
+    fn migration_6_maps_old_statuses_and_keeps_children() {
+        use crate::db::{MIGRATIONS, migrate_with};
+        let mut c = Connection::open_in_memory().unwrap();
+        c.pragma_update(None, "foreign_keys", true).unwrap();
+        migrate_with(&mut c, &MIGRATIONS[..5]).unwrap();
+        c.execute_batch(
+            "INSERT INTO stores VALUES ('s1','Tienda A');
+             INSERT INTO orders(id,store_id,external_number,status,order_date) VALUES
+                 ('a','s1','#1','paid','2026-01-01'), ('b','s1','#2','delivered','2026-01-02'), ('c','s1','#3','shipped','2026-01-03');
+             INSERT INTO order_items(order_id,name,quantity,unit_price_cents) VALUES ('a','X',1,100),('b','Y',2,100);
+             INSERT INTO shipments(order_id,carrier) VALUES ('b','Correo');
+             INSERT INTO status_history(order_id,from_status,to_status) VALUES
+                 ('a',NULL,'pending'),('a','pending','paid'),('b','shipped','delivered');",
+        )
+        .unwrap();
+        migrate(&mut c).unwrap();
+        let st = |n: &str| get_order(&c, n).unwrap();
+        assert_eq!(
+            ["a", "b", "c"].map(|n| st(n).summary.status),
+            ["pending", "shipped", "shipped"]
+        );
+        // Los hijos sobreviven a la reconstrucción de la tabla (no hubo borrado en cascada).
+        assert_eq!((st("a").items.len(), st("b").items.len()), (1, 1));
+        assert_eq!(st("b").shipment.unwrap().carrier.as_deref(), Some("Correo"));
+        // pending→pending y shipped→shipped desaparecen del historial; el resto se conserva.
+        assert_eq!(st("a").history.len(), 1);
+        assert_eq!(st("b").history.len(), 0);
+        let fk: bool = c
+            .query_row("PRAGMA foreign_keys", [], |r| r.get(0))
+            .unwrap();
+        assert!(fk);
     }
 
     #[test]
@@ -706,8 +740,8 @@ mod tests {
     fn status_changes_are_recorded() {
         let (mut c, s) = setup();
         let id = create_order(&mut c, input(&s, "#1")).unwrap().summary.id;
-        let o = change_status(&mut c, &id, "paid").unwrap();
-        assert_eq!(o.summary.status, "paid");
+        let o = change_status(&mut c, &id, "ready").unwrap();
+        assert_eq!(o.summary.status, "ready");
         let o = change_status(&mut c, &id, "shipped").unwrap();
         let h: Vec<_> = o
             .history
@@ -718,14 +752,14 @@ mod tests {
             h,
             [
                 (None, "pending"),
-                (Some("pending"), "paid"),
-                (Some("paid"), "shipped")
+                (Some("pending"), "ready"),
+                (Some("ready"), "shipped")
             ]
         );
         assert!(change_status(&mut c, &id, "shipped").is_err());
         assert!(change_status(&mut c, &id, "xx").is_err());
         assert!(matches!(
-            change_status(&mut c, "no-existe", "paid"),
+            change_status(&mut c, "no-existe", "ready"),
             Err(AppError::NotFound(_))
         ));
     }
@@ -843,7 +877,7 @@ mod tests {
         let a = create_order(&mut c, input(&s, "#1424")).unwrap().summary.id;
         create_order(&mut c, input(&s2, "#1500")).unwrap();
         create_order(&mut c, input(&s, "A_%1")).unwrap();
-        change_status(&mut c, &a, "paid").unwrap();
+        change_status(&mut c, &a, "ready").unwrap();
         let n = |f: OrderFilter| list_orders(&c, &f).unwrap().len();
         assert_eq!(n(OrderFilter::default()), 3);
         assert_eq!(
@@ -855,7 +889,7 @@ mod tests {
         );
         assert_eq!(
             n(OrderFilter {
-                status: Some("paid".into()),
+                status: Some("ready".into()),
                 ..Default::default()
             }),
             1

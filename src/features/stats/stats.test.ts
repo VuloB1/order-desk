@@ -3,7 +3,7 @@ import type { OrderSummary } from "@/lib/api";
 import { lastMonths, summarize } from "./stats";
 
 const order = (over: Partial<OrderSummary>): OrderSummary => ({
-  id: "x", externalNumber: "#1", status: "paid", orderDate: "2026-11-05", destination: "chile",
+  id: "x", externalNumber: "#1", status: "ready", orderDate: "2026-11-05", destination: "chile",
   itemCount: 1, subtotalCents: 0, shippingCostCents: 0, discountCents: 0, discountCode: null,
   totalCents: 1000, invoiceRequired: false, invoiceNumber: null, ...over,
 });
@@ -26,7 +26,7 @@ test("las cifras ignoran pedidos cancelados salvo en «por estado»", () => {
   expect(s.revenueCents).toBe(4500);
   expect(s.averageCents).toBe(1500);
   expect(s.invoicesPending).toBe(1);
-  expect(s.byStatus).toMatchObject({ paid: 3, cancelled: 1 });
+  expect(s.byStatus).toMatchObject({ ready: 3, cancelled: 1 });
   expect(s.byDestination.foreign).toEqual({ count: 1, totalCents: 3000 });
   expect(s.months[s.months.length - 1]).toEqual({ month: "2026-11", count: 1, totalCents: 1000 });
   expect(s.months[s.months.length - 2]).toEqual({ month: "2026-10", count: 1, totalCents: 3000 });

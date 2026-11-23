@@ -1,12 +1,14 @@
 use crate::error::{AppError, Result};
 use serde::{Deserialize, Serialize};
 
-pub const STATUSES: [&str; 6] = [
+pub const STATUSES: [&str; 8] = [
     "pending",
-    "paid",
-    "preparing",
+    "awaiting_chips",
+    "nrf",
+    "classic",
+    "testing",
+    "ready",
     "shipped",
-    "delivered",
     "cancelled",
 ];
 pub const DESTINATIONS: [&str; 2] = ["chile", "foreign"];

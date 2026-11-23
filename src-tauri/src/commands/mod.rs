@@ -1,4 +1,5 @@
 pub mod backup;
+pub mod board;
 pub mod update;
 pub mod vault;
 

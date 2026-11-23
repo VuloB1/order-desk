@@ -15,7 +15,7 @@ const SHOWN = 100;
 /** Importa pedidos de un Excel: elegir fichero → resumen y valores por defecto → aplicar. */
 export default function ImportDialog({ onClose, onChanged }: { onClose: () => void; onChanged: () => void }) {
   const [rows, setRows] = useState<ImportRow[] | null>(null);
-  const [status, setStatus] = useState<OrderStatus>("delivered");
+  const [status, setStatus] = useState<OrderStatus>("shipped");
   const [date, setDate] = useState(todayIso());
   const [result, setResult] = useState<ImportResult | null>(null);
   const [busy, setBusy] = useState(false);

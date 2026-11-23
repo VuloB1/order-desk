@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Estado de pedidos</title>
+<style>
+:root {
+  --background: oklch(1 0 0); --foreground: oklch(0.145 0 0); --card: oklch(1 0 0);
+  --muted: oklch(0.97 0 0); --muted-foreground: oklch(0.556 0 0); --border: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0); --star: oklch(0.74 0.12 82); --radius: 0.625rem;
+  color-scheme: light;
+}
+:root.dark {
+  --background: oklch(0.145 0 0); --foreground: oklch(0.985 0 0); --card: oklch(0.205 0 0);
+  --muted: oklch(0.269 0 0); --muted-foreground: oklch(0.708 0 0); --border: oklch(1 0 0 / 10%);
+  --ring: oklch(0.556 0 0); --star: oklch(0.93 0.07 92);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh; display: flex; flex-direction: column;
+  font-family: ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  background: linear-gradient(180deg, var(--background) 0%, color-mix(in oklch, var(--background) 93%, var(--foreground)) 100%) fixed;
+  color: var(--foreground);
+}
+/* Cuadrícula y estrellas, como el fondo de la aplicación. */
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.34;
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, var(--foreground) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in oklch, var(--foreground) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(to right, color-mix(in oklch, var(--foreground) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in oklch, var(--foreground) 12%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+}
+.star { position: fixed; z-index: -1; width: 14px; height: 14px; fill: var(--star); opacity: 0.4; pointer-events: none; animation: tw 6s ease-in-out infinite; }
+@keyframes tw { 0%,100% { opacity: 0.18; transform: scale(0.7) rotate(0); } 50% { opacity: 0.7; transform: scale(1) rotate(12deg); } }
+header {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px 20px;
+  border-bottom: 1px solid var(--border); background: color-mix(in oklch, var(--card) 80%, transparent); backdrop-filter: blur(6px);
+}
+header svg.logo { width: 28px; height: 28px; }
+h1 { margin: 0; font-size: 1.15rem; font-weight: 600; flex: 1; }
+input[type=search] {
+  font: inherit; padding: 7px 12px; min-width: 200px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--card); color: inherit;
+}
+input[type=search]:focus-visible, button:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+button {
+  font: inherit; cursor: pointer; padding: 6px 10px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--card); color: inherit; transition: background-color .15s ease, transform .15s ease;
+}
+button:hover { background: var(--muted); transform: translateY(-1px); }
+main { flex: 1; display: flex; gap: 14px; padding: 16px 20px; overflow-x: auto; align-items: flex-start; }
+.col {
+  flex: 0 0 270px; max-height: calc(100vh - 140px); display: flex; flex-direction: column;
+  background: color-mix(in oklch, var(--card) 70%, transparent); border: 1px solid var(--border); border-radius: calc(var(--radius) * 1.4);
+}
+.col h2 {
+  margin: 10px; padding: 7px 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  font-size: .9rem; font-weight: 600; border-radius: 999px;
+  background: var(--c); color: oklch(0.2 0.03 260);
+}
+.dark .col h2 { background: color-mix(in oklch, var(--c) 25%, transparent); color: var(--c); }
+.col h2 em { font-style: normal; font-variant-numeric: tabular-nums; opacity: .8; }
+.col ul { list-style: none; margin: 0; padding: 0 10px 10px; overflow-y: auto; display: grid; gap: 8px; }
+.card {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 10px 12px;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  animation: in .3s ease-out both; transition: transform .15s ease, box-shadow .2s ease;
+}
+.card:hover { transform: translateY(-1px); box-shadow: 0 2px 8px -3px rgb(0 0 0 / .3); }
+@keyframes in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.card b { font-variant-numeric: tabular-nums; }
+.kit { color: var(--muted-foreground); font-size: .85rem; flex: 1; }
+.dest { font-size: .72rem; padding: 2px 8px; border-radius: 999px; background: oklch(0.901 0.075 70.697); color: oklch(0.2 0.03 50); }
+.dest.foreign { background: oklch(0.903 0.076 319.62); color: oklch(0.2 0.03 320); }
+.dark .dest { background: color-mix(in oklch, oklch(0.901 0.075 70.697) 25%, transparent); color: oklch(0.901 0.075 70.697); }
+.dark .dest.foreign { background: color-mix(in oklch, oklch(0.903 0.076 319.62) 25%, transparent); color: oklch(0.903 0.076 319.62); }
+.card.hit { outline: 2px solid var(--ring); }
+.card.dim { display: none; }
+footer { padding: 10px 20px 16px; text-align: center; color: var(--muted-foreground); font-size: .8rem; }
+@media (prefers-reduced-motion: reduce) { .star, .card { animation: none; } button, .card { transition: none; } }
+</style>
+</head>
+<body>
+<svg class="star" style="left:5%;top:14%" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C12.9 7.1 16.9 11.1 24 12C16.9 12.9 12.9 16.9 12 24C11.1 16.9 7.1 12.9 0 12C7.1 11.1 11.1 7.1 12 0Z"/></svg>
+<svg class="star" style="left:93%;top:10%;animation-delay:1.2s" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C12.9 7.1 16.9 11.1 24 12C16.9 12.9 12.9 16.9 12 24C11.1 16.9 7.1 12.9 0 12C7.1 11.1 11.1 7.1 12 0Z"/></svg>
+<svg class="star" style="left:90%;top:80%;animation-delay:2.4s" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C12.9 7.1 16.9 11.1 24 12C16.9 12.9 12.9 16.9 12 24C11.1 16.9 7.1 12.9 0 12C7.1 11.1 11.1 7.1 12 0Z"/></svg>
+<header>
+  <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><circle cx="12" cy="16" r="9.5" fill="#ED93B1"/><circle cx="21" cy="16" r="9.5" fill="#7F77DD"/><path d="M16.5 7.633A9.5 9.5 0 0 1 16.5 24.367 9.5 9.5 0 0 1 16.5 7.633Z" fill="#4B1528"/></svg>
+  <h1>📋 Estado de pedidos</h1>
+  <input type="search" id="q" placeholder="🔍 Buscar mi número de pedido…" aria-label="Buscar mi número de pedido">
+  <button id="theme" type="button" aria-label="Cambiar tema" title="Cambiar tema">🌓</button>
+</header>
+<main>{{COLS}}</main>
+<footer>Última actualización: {{DATE}}</footer>
+<script>
+(function () {
+  var root = document.documentElement;
+  try { var saved = localStorage.getItem("tema"); } catch (e) {}
+  var dark = saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  root.classList.toggle("dark", dark);
+  document.getElementById("theme").onclick = function () {
+    dark = !dark; root.classList.toggle("dark", dark);
+    try { localStorage.setItem("tema", dark ? "dark" : "light"); } catch (e) {}
+  };
+  var cards = Array.prototype.slice.call(document.querySelectorAll(".card"));
+  document.getElementById("q").addEventListener("input", function (e) {
+    var q = e.target.value.trim().toLowerCase();
+    cards.forEach(function (c) {
+      var hit = q && c.getAttribute("data-n").toLowerCase().indexOf(q) !== -1;
+      c.classList.toggle("hit", !!hit);
+      c.classList.toggle("dim", !!q && !hit);
+    });
+  });
+})();
+</script>
+</body>
+</html>

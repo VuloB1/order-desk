@@ -6,6 +6,7 @@ mod error;
 mod export;
 mod import;
 mod platform;
+mod publish;
 mod vault;
 
 use std::sync::Mutex;
@@ -67,6 +68,9 @@ pub fn run() {
             commands::vault::set_private_data,
             commands::export_orders,
             commands::import_preview,
+            commands::board::get_board_settings,
+            commands::board::set_board_settings,
+            commands::board::publish_board,
             commands::import_apply,
             commands::backup::backup_create,
             commands::backup::backup_restore,
