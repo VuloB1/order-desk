@@ -2,6 +2,8 @@
 
 Aplicación de escritorio para Windows, sin conexión a internet, para llevar el control de pedidos comerciales (pensada para unos 200–1.000). Todo se guarda en tu propio equipo.
 
+![Lista de pedidos](assets/screenshots/pedidos.png)
+
 ## Qué puedes hacer
 
 - **Pedidos**: número del pedido (`#1424`), fecha, destino (Chile o extranjero), productos, descuentos, coste de envío y seguimiento. Cada pedido guarda el historial de sus cambios de estado.
@@ -14,6 +16,20 @@ Aplicación de escritorio para Windows, sin conexión a internet, para llevar el
 - **Exportar** a JSON o CSV (Excel), solo con datos públicos.
 - **Copias de seguridad** cifradas, con restauración.
 - **Actualizaciones automáticas** desde las [releases](../../releases) de este repositorio.
+
+## Capturas
+
+Todos los datos de las imágenes son inventados.
+
+| Detalle de un pedido | Nuevo pedido |
+| --- | --- |
+| ![Detalle de un pedido](assets/screenshots/detalle.png) | ![Formulario de nuevo pedido](assets/screenshots/nuevo-pedido.png) |
+
+![Estadísticas](assets/screenshots/estadisticas.png)
+
+Tablero público que ven los clientes:
+
+![Tablero público](assets/screenshots/tablero.png)
 
 ## Instalación
 
